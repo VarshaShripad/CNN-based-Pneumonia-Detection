@@ -125,9 +125,18 @@ def run_app():
         else:
             image = Image.open(image)
             image = np.array(image)
+
+    # Resize the image to 150x150
         image = cv2.resize(image, (150, 150))
-        image = np.expand_dims(image, axis=0)
-        return image / 255.0
+
+    # Ensure the image has 3 channels (RGB)
+        if len(image.shape) == 2:  # Grayscale image
+            image = cv2.cvtColor(image, cv2.COLOR_GRAY2RGB)
+
+    # Normalize and expand dimensions
+        image = image / 255.0
+        image = np.expand_dims(image, axis=0)  # Add batch dimension
+        return image
 
     if uploaded_file is not None:
         image = preprocess_image(uploaded_file)
